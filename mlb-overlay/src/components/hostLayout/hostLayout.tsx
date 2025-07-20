@@ -6,13 +6,13 @@ import styles from "./hostLayout.module.css";
 const gameData = {
     ante: 2,
     time: "1:22:45",
-    focus: 1,
+    focus: 0,
     hosts: [
-        'placeholder',
+        'https://vdo.ninja/?view=asdASDDHK7j&bitrate=10000&scale=100',
     ],
     playerOne: {
         name: "nandre",
-        link: 'fill in later',
+        link: 'https://vdo.ninja/?view=Md7G9Zj&bitrate=10000&scale=100',
         lives: 3,
         points: 1,
         roundNum: 1,
@@ -24,7 +24,7 @@ const gameData = {
     },
     playerTwo: {
         name: "Zaino",
-        link: 'fill in later',
+        link: 'https://vdo.ninja/?view=SKJDHK7j&bitrate=10000&scale=100',
         lives: 2,
         points: 0,
         roundNum: 2,
@@ -69,7 +69,7 @@ const HostLayout = () => {
             const time = stopwatch.getElapsedTime();
             const newGameData = { ...gameDataState };
             newGameData.time = time;
-            //newGameData.focus = Math.floor(stopwatch.elapsedTime/10);
+            newGameData.focus = Math.floor(stopwatch.elapsedTime/10);
             setGameDataState(newGameData);
         }, 1000);
         return () => clearInterval(interval);
@@ -77,10 +77,12 @@ const HostLayout = () => {
 
 
     return (
+        
         <div className={styles.wrapper} >
             <HostRive GameData={gameDataState}/>
             <BackgroundShader />
         </div>
+        
     )
 }
 

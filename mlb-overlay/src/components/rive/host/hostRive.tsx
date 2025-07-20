@@ -1,5 +1,6 @@
-import { Rive } from "@rive-app/webgl2";
+import { Rive, ViewModelInstance } from "@rive-app/canvas";
 import React from "react";
+import { vdoCTX, VdoIframe } from "../../vdoFrame/vdoCtx";
 
 interface props {
     GameData: {
@@ -38,16 +39,8 @@ const HostRive = (hostProps: props) => {
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
     const [rive, setRive] = React.useState<Rive | null>(null);
     const [riveLoaded, setRiveLoaded] = React.useState(false);
-
-    const [camPos, setCamPos] = React.useState<any>({
-        p1Cam: {
-            x: 0,
-            y: 0,
-            sx: 1,
-            sy: 1,
-        }
-    });
-
+    const cams = React.useContext(vdoCTX);
+    
     //React.useEffect(() => {});
 
     React.useEffect(() => {
@@ -67,74 +60,12 @@ const HostRive = (hostProps: props) => {
                 console.log("Rive file loaded successfully");
                 setRiveLoaded(true);
                 const vmi = r.viewModelInstance;
-
-                const pOCam = new VdoIframe("https://vdo.ninja/?view=Md7G9Zj&solo&room=broughtshowc&label=p1OBS");
-
-                const bCamX = vmi.number("bCamX");
-                // bCamX?.on((event) => {
-                //     if (event !== undefined) {
-                //         setCamPos((prev: any) => ({
-                //             ...prev,
-                //             p1Cam: {
-                //                 ...prev.p1Cam,
-                //                 x: event,
-                //             }
-                //         }));
-                //     }
-                // });
-                const bCamY = vmi.number("bCamY");
-                // bCamY?.on((event) => {
-                //     if (event !== undefined) {
-                //         setCamPos((prev: any) => ({
-                //             ...prev,
-                //             p1Cam: {
-                //                 ...prev.p1Cam,
-                //                 y: event,
-                //             }
-                //         }));
-                //     }
-                // });
-                const bCamSX = vmi.number("bCamSX");
-                // bCamSX?.on((event) => {
-                //     if (event !== undefined) {
-                //         setCamPos((prev: any) => ({
-                //             ...prev,
-                //             p1Cam: {
-                //                 ...prev.p1Cam,
-                //                 sx: event,
-                //             }
-                //         }));
-                //     }
-                // });
-                const bCamSY = vmi.number("bCamSY");
-                // bCamSY?.on((event) => {
-                //     if (event !== undefined) {
-                //         setCamPos((prev: any) => ({
-                //             ...prev,
-                //             p1Cam: {
-                //                 ...prev.p1Cam,
-                //                 sy: event,
-                //             }
-                //         }));
-                //     }
-                // });
-                // setInterval(() => {
-                //     // setCamPos((prev: any) => ({
-                //     //     ...prev,
-                //     //     p1Cam: {
-                //     //         x: bCamX?.value ?? 0,
-                //     //         y: bCamY?.value ?? 0,
-                //     //         sx: bCamSX?.value ?? 1,
-                //     //         sy: bCamSY?.value ?? 1,
-                //     //     }
-                //     // }));
-                //     pOCam.updateTransform(
-                //         bCamX?.value ?? 0,
-                //         bCamY?.value ?? 0,
-                //         bCamSX?.value ?? 1,
-                //         bCamSY?.value ?? 1
-                //     );
-                // }, 5);
+                
+                bindCamPos(cams?.p1Cam, vmi, "bCam");
+                bindCamPos(cams?.p2Cam, vmi, "rCam");
+                
+                //bindCamPos(p1Cam, vmi, "bCam");
+                //bindCamPos(p2Cam, vmi, "rCam");
             },
         });
         
@@ -142,8 +73,38 @@ const HostRive = (hostProps: props) => {
     }, []);
 
     React.useEffect(() => {
-        if(!rive && !riveLoaded) return;
+        if(!rive || !riveLoaded) return;
         updateRive(hostProps.GameData);
+        
+        const p1Cam = cams?.p1Cam;
+        const p2Cam = cams?.p2Cam;
+        if(!p1Cam || !p2Cam) return;
+        if(p1Cam.src !== hostProps.GameData.playerOne.link) {
+            p1Cam.setSrc(hostProps.GameData.playerOne.link);
+        }
+        if(p2Cam.src !== hostProps.GameData.playerTwo.link) {
+            p2Cam.setSrc(hostProps.GameData.playerTwo.link);
+        }
+
+        const hostCams = cams?.hostCams || [];
+        const vmi = rive.viewModelInstance;
+        hostCams.forEach((cam, index) => {
+            if (index < hostProps.GameData.hosts.length) {
+                if (cam.src !== hostProps.GameData.hosts[index]) {
+                    cam.setSrc(hostProps.GameData.hosts[index]);
+                }
+            } else {
+                cam.remove();
+            }
+        });
+        hostProps.GameData.hosts.forEach((src, index) => {
+            if (index >= hostCams.length) {
+                const newCam = new VdoIframe(src);
+                bindCamPos(newCam, vmi, `hc${index + 1}`);
+                hostCams.push(newCam);
+            }
+        });
+        
     }, [rive, riveLoaded, hostProps]);
 
     function updateRive(gameData: props["GameData"]) {
@@ -216,6 +177,58 @@ const HostRive = (hostProps: props) => {
         });
     }
 
+    function bindCamPos(iframe: VdoIframe, vmi: ViewModelInstance, prefix: string) {
+        const x = vmi.number(`${prefix}X`);
+        const y = vmi.number(`${prefix}Y`);
+        const sx = vmi.number(`${prefix}SX`);
+        const sy = vmi.number(`${prefix}SY`);
+        console.log(`${prefix}X, ${prefix}Y, ${prefix}SX, ${prefix}SY`);
+        
+
+        iframe.setPosition(x?.value ?? 0, y?.value ?? 0);
+        iframe.setScale(sx?.value ?? 1, sy?.value ?? 1);
+        try {
+            x?.on((event) => {
+                if (event !== undefined) {
+                    iframe.setX(event);
+                }
+            });
+        } catch (e) {
+            console.error(`Error binding X for ${prefix}:`, e);
+        }
+        
+        try {
+            y?.on((event) => {
+                if (event !== undefined) {
+                    iframe.setY(event);
+                }
+            });
+        } catch (e) {
+            console.error(`Error binding Y for ${prefix}:`, e);
+        }
+        
+        try {
+            sx?.on((event) => {
+                if (event !== undefined) {
+                    iframe.setScaleX(event);
+                }
+            });
+        } catch (e) {
+            console.error(`Error binding SX for ${prefix}:`, e);
+        }
+        
+        try {
+            sy?.on((event) => {
+                if (event !== undefined) {
+                    iframe.setScaleY(event);
+                }
+            });
+        } catch (e) {
+            console.error(`Error binding SY for ${prefix}:`, e);
+        }
+        
+    }
+
     return(
         <>
             <canvas ref={canvasRef} style={{width: "100%", height: "100%", zIndex: 999}} />
@@ -231,82 +244,101 @@ const HostRive = (hostProps: props) => {
 
 export default HostRive;
 
-class VdoIframe {
-    private iframe: HTMLIFrameElement;
-    private containerDiv: HTMLDivElement;
-    private src: string;
-    private x: number;
-    private y: number;
-    private sX: number;
-    private sY: number;
+// class VdoIframe {
+//     private iframe: HTMLIFrameElement;
+//     private containerDiv: HTMLDivElement;
+//     public src: string;
+//     private x: number;
+//     private y: number;
+//     private sX: number;
+//     private sY: number;
 
-    constructor(src: string) {
-        this.src = src;
-        this.x = 0;
-        this.y = 0;
-        this.sX = 0;
-        this.sY = 0;
+//     constructor(src: string) {
+//         this.src = src;
+//         this.x = 0;
+//         this.y = 0;
+//         this.sX = 0;
+//         this.sY = 0;
 
-        this.containerDiv = document.createElement("div");
-        this.containerDiv.style.width = "1920px";
-        this.containerDiv.style.height = "1080px";
-        this.containerDiv.style.zIndex = "100";
+//         this.containerDiv = document.createElement("div");
+//         this.containerDiv.style.width = "1920px";
+//         this.containerDiv.style.height = "1080px";
+//         this.containerDiv.style.zIndex = "100";
+//         this.containerDiv.style.position = "absolute";
+//         this.containerDiv.style.top = "0";
+//         this.containerDiv.style.left = "0";
 
-        this.iframe = document.createElement("iframe");
-        this.iframe.src = this.src;
-        this.iframe.style.width = "100%";
-        this.iframe.style.height = "100%";
-        this.iframe.style.border = "none";
-        this.iframe.allow = "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;midi *;geolocation;camera *;microphone *;fullscreen;picture-in-picture;display-capture;accelerometer;autoplay;gyroscope;screen-wake-lock;";
-        this.containerDiv.appendChild(this.iframe);
+//         this.iframe = document.createElement("iframe");
+//         this.iframe.src = this.src;
+//         this.iframe.style.width = "100%";
+//         this.iframe.style.height = "100%";
+//         this.iframe.style.border = "none";
+//         this.iframe.allow = "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;midi *;geolocation;camera *;microphone *;fullscreen;picture-in-picture;display-capture;accelerometer;autoplay;gyroscope;screen-wake-lock;";
+//         this.containerDiv.appendChild(this.iframe);
 
-        this.updateTransform();
+//         this.iframe.onload = () => {
+//             setTimeout(() => {
+//                 this.iframe.contentWindow?.postMessage({
+//                     "bitrate": 6000,
+//                 }, '*');
+//             }, 5000);
+//             this.iframe.contentWindow?.postMessage({
+//                 "bitrate": 6000
+//             }, '*');
+//         }
 
-        document.body.appendChild(this.containerDiv);
-    }
+//         this.updateTransform();
 
-    setPosition(x: number, y: number) {
-        this.x = x;
-        this.y = y;
-        this.updateTransform();
-    }
+//         document.body.appendChild(this.containerDiv);
+//     }
 
-    setX(x: number) {
-        this.x = x;
-        this.updateTransform();
-    }
-    setY(y: number) {
-        this.y = y;
-        this.updateTransform();
-    }
+//     setPosition(x: number, y: number) {
+//         this.x = x;
+//         this.y = y;
+//         this.updateTransform();
+//     }
 
-    setScale(sX: number, sY: number) {
-        this.sX = sX;
-        this.sY = sY;
-        this.updateTransform();
-    }
+//     setX(x: number) {
+//         this.x = x;
+//         this.updateTransform();
+//     }
+//     setY(y: number) {
+//         this.y = y;
+//         this.updateTransform();
+//     }
 
-    setScaleX(sX: number) {
-        this.sX = sX;
-        this.updateTransform();
-    }
-    setScaleY(sY: number) {
-        this.sY = sY;
-        this.updateTransform();
-    }
+//     setScale(sX: number, sY: number) {
+//         this.sX = sX;
+//         this.sY = sY;
+//         this.updateTransform();
+//     }
+
+//     setScaleX(sX: number) {
+//         this.sX = sX;
+//         this.updateTransform();
+//     }
+//     setScaleY(sY: number) {
+//         this.sY = sY;
+//         this.updateTransform();
+//     }
     
-    updateTransform(x?: number, y?: number, sX?: number, sY?: number) {
-        if (x !== undefined) this.x = x;
-        if (y !== undefined) this.y = y;
-        if (sX !== undefined) this.sX = sX;
-        if (sY !== undefined) this.sY = sY;
+//     updateTransform(x?: number, y?: number, sX?: number, sY?: number) {
+//         if (x !== undefined) this.x = x;
+//         if (y !== undefined) this.y = y;
+//         if (sX !== undefined) this.sX = sX;
+//         if (sY !== undefined) this.sY = sY;
 
-        this.containerDiv.style.transform = `translate(${this.x}px, ${this.y}px) scale(${this.sX}, ${this.sY})`;
-    }
+//         this.containerDiv.style.transform = `translate(${this.x}px, ${this.y}px) scale(${this.sX}, ${this.sY})`;
+//     }
 
-    remove() {
-        if (this.containerDiv.parentNode) {
-            this.containerDiv.parentNode.removeChild(this.containerDiv);
-        }
-    }
-}
+//     setSrc(src: string) {
+//         this.src = src;
+//         this.iframe.src = src;
+//     }
+
+//     remove() {
+//         if (this.containerDiv.parentNode) {
+//             this.containerDiv.parentNode.removeChild(this.containerDiv);
+//         }
+//     }
+// }
