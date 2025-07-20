@@ -5,8 +5,11 @@ interface props {
     GameData: {
         ante: number;
         time: string;
+        focus: number;
+        hosts: string[];
         playerOne: {
             name: string;
+            link: string;
             lives: number;
             points: number;
             roundNum: number;
@@ -18,6 +21,7 @@ interface props {
         };
         playerTwo: {
             name: string;
+            link: string;
             lives: number;
             points: number;
             roundNum: number;
@@ -114,23 +118,23 @@ const HostRive = (hostProps: props) => {
                 //         }));
                 //     }
                 // });
-                setInterval(() => {
-                    // setCamPos((prev: any) => ({
-                    //     ...prev,
-                    //     p1Cam: {
-                    //         x: bCamX?.value ?? 0,
-                    //         y: bCamY?.value ?? 0,
-                    //         sx: bCamSX?.value ?? 1,
-                    //         sy: bCamSY?.value ?? 1,
-                    //     }
-                    // }));
-                    pOCam.updateTransform(
-                        bCamX?.value ?? 0,
-                        bCamY?.value ?? 0,
-                        bCamSX?.value ?? 1,
-                        bCamSY?.value ?? 1
-                    );
-                }, 5);
+                // setInterval(() => {
+                //     // setCamPos((prev: any) => ({
+                //     //     ...prev,
+                //     //     p1Cam: {
+                //     //         x: bCamX?.value ?? 0,
+                //     //         y: bCamY?.value ?? 0,
+                //     //         sx: bCamSX?.value ?? 1,
+                //     //         sy: bCamSY?.value ?? 1,
+                //     //     }
+                //     // }));
+                //     pOCam.updateTransform(
+                //         bCamX?.value ?? 0,
+                //         bCamY?.value ?? 0,
+                //         bCamSX?.value ?? 1,
+                //         bCamSY?.value ?? 1
+                //     );
+                // }, 5);
             },
         });
         
@@ -169,6 +173,8 @@ const HostRive = (hostProps: props) => {
         
         hostVMI.number("Ante").value = gameData.ante;
         hostVMI.string("Time").value = gameData.time;
+        hostVMI.number("HostNum").value = gameData.hosts.length;
+        hostVMI.number("Focus").value = gameData.focus;
         hostVMI.string("BlueName").value = gameData.playerOne.name;
         hostVMI.string("RedName").value = gameData.playerTwo.name;
         hostVMI.number("blueLives").value = gameData.playerOne.lives;
@@ -265,8 +271,26 @@ class VdoIframe {
         this.updateTransform();
     }
 
+    setX(x: number) {
+        this.x = x;
+        this.updateTransform();
+    }
+    setY(y: number) {
+        this.y = y;
+        this.updateTransform();
+    }
+
     setScale(sX: number, sY: number) {
         this.sX = sX;
+        this.sY = sY;
+        this.updateTransform();
+    }
+
+    setScaleX(sX: number) {
+        this.sX = sX;
+        this.updateTransform();
+    }
+    setScaleY(sY: number) {
         this.sY = sY;
         this.updateTransform();
     }

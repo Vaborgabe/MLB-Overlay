@@ -6,8 +6,13 @@ import styles from "./hostLayout.module.css";
 const gameData = {
     ante: 2,
     time: "1:22:45",
+    focus: 1,
+    hosts: [
+        'placeholder',
+    ],
     playerOne: {
         name: "nandre",
+        link: 'fill in later',
         lives: 3,
         points: 1,
         roundNum: 1,
@@ -19,6 +24,7 @@ const gameData = {
     },
     playerTwo: {
         name: "Zaino",
+        link: 'fill in later',
         lives: 2,
         points: 0,
         roundNum: 2,
@@ -63,6 +69,7 @@ const HostLayout = () => {
             const time = stopwatch.getElapsedTime();
             const newGameData = { ...gameDataState };
             newGameData.time = time;
+            //newGameData.focus = Math.floor(stopwatch.elapsedTime/10);
             setGameDataState(newGameData);
         }, 1000);
         return () => clearInterval(interval);
