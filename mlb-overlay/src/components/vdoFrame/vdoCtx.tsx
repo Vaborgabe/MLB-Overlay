@@ -8,6 +8,7 @@ export class VdoIframe {
     private y: number;
     private sX: number;
     private sY: number;
+    private volume: number;
 
     constructor(src: string) {
         this.src = src;
@@ -15,6 +16,7 @@ export class VdoIframe {
         this.y = 0;
         this.sX = 0;
         this.sY = 0;
+        this.volume = 1.0; // Default volume
 
         this.containerDiv = document.createElement("div");
         this.containerDiv.style.width = "1920px";
@@ -90,6 +92,14 @@ export class VdoIframe {
     setSrc(src: string) {
         this.src = src;
         this.iframe.src = src;
+    }
+
+    updateVolume(volume: number) {
+        if (this.volume == volume) return;
+        this.iframe.contentWindow?.postMessage({
+            "volume": volume
+        }, '*');
+        this.volume = volume;
     }
 
     remove() {

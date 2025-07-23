@@ -8,11 +8,15 @@ const gameData = {
     time: "1:22:45",
     focus: 0,
     hosts: [
-        'https://vdo.ninja/?view=asdASDDHK7j&bitrate=10000&scale=100',
+        {
+            link: 'https://vdo.ninja/?view=asdASDDHK7j&bitrate=10000&scale=100',
+            volume: 1
+        },
     ],
     playerOne: {
         name: "nandre",
         link: 'https://vdo.ninja/?view=Md7G9Zj&bitrate=10000&scale=100',
+        volume: 1.0,
         lives: 3,
         points: 1,
         roundNum: 1,
@@ -25,6 +29,7 @@ const gameData = {
     playerTwo: {
         name: "Zaino",
         link: 'https://vdo.ninja/?view=SKJDHK7j&bitrate=10000&scale=100',
+        volume: 1.0,
         lives: 2,
         points: 0,
         roundNum: 2,

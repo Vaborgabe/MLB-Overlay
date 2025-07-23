@@ -7,10 +7,14 @@ interface props {
         ante: number;
         time: string;
         focus: number;
-        hosts: string[];
+        hosts: {
+            link: string;
+            volume: number;
+        }[];
         playerOne: {
             name: string;
             link: string;
+            volume: number;
             lives: number;
             points: number;
             roundNum: number;
@@ -23,6 +27,7 @@ interface props {
         playerTwo: {
             name: string;
             link: string;
+            volume: number;
             lives: number;
             points: number;
             roundNum: number;
@@ -81,18 +86,21 @@ const HostRive = (hostProps: props) => {
         if(!p1Cam || !p2Cam) return;
         if(p1Cam.src !== hostProps.GameData.playerOne.link) {
             p1Cam.setSrc(hostProps.GameData.playerOne.link);
+            p1Cam.updateVolume(hostProps.GameData.playerOne.volume);
         }
         if(p2Cam.src !== hostProps.GameData.playerTwo.link) {
             p2Cam.setSrc(hostProps.GameData.playerTwo.link);
+            p2Cam.updateVolume(hostProps.GameData.playerTwo.volume);
         }
 
         const hostCams = cams?.hostCams || [];
         const vmi = rive.viewModelInstance;
         hostCams.forEach((cam, index) => {
             if (index < hostProps.GameData.hosts.length) {
-                if (cam.src !== hostProps.GameData.hosts[index]) {
-                    cam.setSrc(hostProps.GameData.hosts[index]);
+                if (cam.src !== hostProps.GameData.hosts[index].link) {
+                    cam.setSrc(hostProps.GameData.hosts[index].link);
                 }
+                cam.updateVolume(hostProps.GameData.hosts[index].volume);
             } else {
                 cam.remove();
             }
