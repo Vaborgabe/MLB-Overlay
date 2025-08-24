@@ -107,6 +107,10 @@ export class VdoIframe {
             this.containerDiv.parentNode.removeChild(this.containerDiv);
         }
     }
+
+    reload() {
+        this.iframe.src = this.src;
+    }
 }
 
 interface ctxType {

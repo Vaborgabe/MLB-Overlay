@@ -1,0 +1,41 @@
+.wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header {
+    outline: 1px solid rgba(255, 255, 255, 0.25);
+    width: 100%;
+    font-size: 1.25em;
+    background-color: #1F1F1F;
+    display: flex;
+    flex-direction: row;
+}
+.header:hover {
+    cursor: pointer;
+    background-color: #2F2F2F;
+}
+
+.content {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: fit-content;
+    position: relative;
+    bottom: 0px;
+}
+
+.sidebar {
+    width: 2px;
+    background-color: rgba(255, 255, 255, 0.25);
+    height: auto;
+    margin-left: .65em;
+    margin-right: .65em;
+}
+
+.children {
+    flex-grow: 1;
+}

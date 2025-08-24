@@ -1,0 +1,27 @@
+.wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+}
+
+.wrapper > * {
+    margin: 1em 0;
+}
+
+a {
+    background-color: slategray;
+    color: white;
+    padding: 0.5em 1em;
+    border-radius: 0.25em;
+    text-decoration: none;
+    scale: 1;
+    transition: scale 0.95;
+}
+a:hover {
+    scale: 1.05;
+    cursor: pointer;
+}

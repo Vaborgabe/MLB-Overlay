@@ -10,6 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.1",
+    "@mui/material": "^7.3.1",
     "@react-three/drei": "^10.1.2",
     "@react-three/fiber": "^9.1.2",
     "@rive-app/canvas": "^2.28.1",
@@ -17,11 +21,14 @@
     "@rive-app/webgl2": "^2.30.4",
     "glsl-canvas-js": "^0.2.9",
     "glslCanvas": "^0.2.6",
+    "notistack": "^3.0.2",
     "react": "^19.1.0",
     "react-canvas": "^1.3.0",
     "react-dom": "^19.1.0",
     "react-shaders": "^0.0.4",
     "shadertoy-react": "^1.1.2",
+    "socket.io-client": "^4.8.1",
+    "sonner": "^2.0.7",
     "three": "^0.177.0"
   },
   "devDependencies": {

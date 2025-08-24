@@ -1,0 +1,60 @@
+.ngWrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: auto;
+    justify-content: center;
+    align-items: center;
+    margin: 2em;
+}
+
+.ngWrapper > * {
+    margin: 0 .5em;
+}
+
+.gpwrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: auto;
+}
+.gpwrapper > * {
+    flex-grow: 1;
+}
+
+.header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin: .5em;
+}
+
+.infoGroup {
+    display: flex;
+    gap: .5em;
+    align-items: center;
+    flex-direction: row;
+}
+
+.tButton {
+    cursor: pointer;
+    transition: scale 0.2s ease-in-out;
+}
+.tButton:hover {
+    scale: 1.3;
+}
+
+.button {
+    line-height: 1em;
+    padding: .5em;
+    border-radius: .5em;
+    scale: 1;
+    transition: scale 0.2s ease-in-out;
+    background-color: #1F1F1F;
+    cursor: pointer;
+}
+.button:hover {
+    scale: 1.1;
+}

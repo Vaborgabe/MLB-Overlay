@@ -1,0 +1,16 @@
+:root {
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #181818;
+  color: white;
+}
+
+.divider {
+    width: 90%;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.25);
+}

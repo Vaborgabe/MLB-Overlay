@@ -1,0 +1,40 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 20em;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    margin: 1em;
+}
+
+.settingTitle {
+    width: 90%;
+}
+
+.volumeSlider {
+    width: 90%;
+    margin: 0.5em;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 2px;
+    border: none;
+    background: rgba(255, 255, 255, 0.33);
+}
+
+.volumeSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: .75em;
+    height: .75em;
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+}
+
+.button {
+    transition: scale 0.2s ease-in-out;
+    cursor: pointer;
+}
+.button:hover {
+    scale: 1.1;
+}

@@ -1,84 +1,135 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { type Gamestate, type Player } from "../../interfaces";
 import HostRive from "../rive/host/hostRive";
 import BackgroundShader from "../shaders/background/backgroundShader";
+import { socketCtx } from "../socketIOCtx/socketIOCtx";
 import styles from "./hostLayout.module.css";
 
 const gameData = {
-    ante: 2,
-    time: "1:22:45",
+    ante: 0,
+    time: "0:00:00",
     focus: 0,
     hosts: [
         {
-            link: 'https://vdo.ninja/?view=asdASDDHK7j&bitrate=10000&scale=100',
+            link: 'https://vdo.ninja/?view=hskjfhksjdh&bitrate=10000&scale=100',
             volume: 1
         },
     ],
     playerOne: {
-        name: "nandre",
-        link: 'https://vdo.ninja/?view=Md7G9Zj&bitrate=10000&scale=100',
+        name: "Player One",
+        link: 'https://vdo.ninja/?view=hskjfhksjdh&bitrate=10000&scale=100',
         volume: 1.0,
-        lives: 3,
-        points: 1,
-        roundNum: 1,
-        prevHighScore: "100",
-        totalSpent: "$50",
-        mlbTotal: "1000",
-        mlbRecord: "10-5",
-        vouchers: ["overstock"]
+        lives: 4,
+        points: 0,
+        roundNum: 0,
+        prevHighScore: "0",
+        totalSpent: "0",
+        mlbTotal: "0",
+        mlbRecord: "0",
+        vouchers: [] as string[]
     },
     playerTwo: {
-        name: "Zaino",
-        link: 'https://vdo.ninja/?view=SKJDHK7j&bitrate=10000&scale=100',
+        name: "Player Two",
+        link: 'https://vdo.ninja/?view=hskjfhksjdh&bitrate=10000&scale=100',
         volume: 1.0,
-        lives: 2,
+        lives: 4,
         points: 0,
-        roundNum: 2,
-        prevHighScore: "150",
-        totalSpent: "$53",
-        mlbTotal: "1200",
-        mlbRecord: "6-5",
-        vouchers: ["hone", "glowUp"]
-    }
-}
-
-class stopWatch {
-    startTime: number;
-    elapsedTime: number;
-
-    constructor() {
-        this.startTime = Date.now();
-        this.elapsedTime = 0;
-    }
-
-    reset() {
-        this.startTime = Date.now();
-        this.elapsedTime = 0;
-    }
-
-    getElapsedTime() {
-        this.elapsedTime = Math.floor((Date.now() - this.startTime) / 1000);
-        //convert to H:MM:SS format
-        const s = Math.floor(this.elapsedTime % 60);
-        const m = Math.floor((this.elapsedTime / 60) % 60);
-        const h = Math.floor(this.elapsedTime / 3600);
-        return `${h}:${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+        roundNum: 0,
+        prevHighScore: "0",
+        totalSpent: "0",
+        mlbTotal: "0",
+        mlbRecord: "0",
+        vouchers: [] as string[]
     }
 }
 
 const HostLayout = () => {
+    const socket = React.useContext(socketCtx);
     const [gameDataState, setGameDataState] = React.useState(gameData);
+    const [hosts, setHosts] = React.useState<Player[]>([]);
+    const [game, setGame] = React.useState<Gamestate | undefined>(undefined);
 
-    const stopwatch = new stopWatch();
-    React.useEffect(() => {
-        const interval = setInterval(() => {
-            const time = stopwatch.getElapsedTime();
-            const newGameData = { ...gameDataState };
-            newGameData.time = time;
-            newGameData.focus = Math.floor(stopwatch.elapsedTime/10);
-            setGameDataState(newGameData);
-        }, 1000);
-        return () => clearInterval(interval);
-    }, []);
+    useEffect(() => {
+        if (socket) {
+            socket.emit('getHosts');
+            socket.emit('getGame');
+
+            socket.on('hosts', (hosts: Player[]) => {
+                console.log("Received hosts:", hosts);
+                setHosts(hosts);
+                // for(let i = 0; i < (cams?.hostCams.length?? 0); i++) {
+                //     const host = hosts[i];
+                //     cams?.hostCams[i].setSrc(`https://vdo.ninja/?view=${host.vdoCode}&bitrate=10000&scale=100`);
+                //     console.log(`Setting host cam ${i} to: https://vdo.ninja/?view=${host.vdoCode}&bitrate=10000&scale=100`);
+                //     cams?.hostCams[i].reload();
+                // }
+            });
+            socket.on('game', (game: Gamestate) => {
+                console.log("Received game:", game);
+                setGame(game);
+            });
+        }
+
+        return () => {
+            socket?.off('hosts');
+            socket?.off('game');
+        };
+    }, [socket]);
+
+    useEffect(() => {
+        updateGameData();
+    }, [game, hosts]);
+
+    function updateGameData() {
+        if(!game || !hosts) return;
+        setGameDataState({
+            ante: game.ante,
+            time: game.time,
+            focus: game.focus,
+            hosts: hosts.map((host) => ({
+                link: `https://vdo.ninja/?view=${host.vdoCode}&bitrate=10000&scale=100`,
+                volume: host.volume
+            })),
+            playerOne: {
+                name: game.playerOne.name,
+                link: `https://vdo.ninja/?view=${game.playerOne.vdoCode}&bitrate=10000&scale=100`,
+                volume: game.playerOne.volume,
+                lives: game.playerOne.lives,
+                points: game.playerOne.points,
+                roundNum: game.playerOne.roundNum,
+                prevHighScore: game.playerOne.prevHighScore+"",
+                totalSpent: game.playerOne.totalSpent+"",
+                mlbTotal: game.playerOne.mlbTotal+"",
+                mlbRecord: game.playerOne.mlbRecord+"",
+                vouchers: game.playerOne.vouchers
+            },
+            playerTwo: {
+                name: game.playerTwo.name,
+                link: `https://vdo.ninja/?view=${game.playerTwo.vdoCode}&bitrate=10000&scale=100`,
+                volume: game.playerTwo.volume,
+                lives: game.playerTwo.lives,
+                points: game.playerTwo.points,
+                roundNum: game.playerTwo.roundNum,
+                prevHighScore: game.playerTwo.prevHighScore+"",
+                totalSpent: game.playerTwo.totalSpent+"",
+                mlbTotal: game.playerTwo.mlbTotal+"",
+                mlbRecord: game.playerTwo.mlbRecord+"",
+                vouchers: game.playerTwo.vouchers
+            }
+        });
+    }
+
+    // const stopwatch = new stopWatch();
+    // React.useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         const time = stopwatch.getElapsedTime();
+    //         const newGameData = { ...gameDataState };
+    //         newGameData.time = time;
+    //         newGameData.focus = Math.floor(stopwatch.elapsedTime/10);
+    //         setGameDataState(newGameData);
+    //     }, 1000);
+    //     return () => clearInterval(interval);
+    // }, []);
 
 
     return (
@@ -88,7 +139,7 @@ const HostLayout = () => {
             <BackgroundShader />
         </div>
         
-    )
+    );
 }
 
 export default HostLayout;

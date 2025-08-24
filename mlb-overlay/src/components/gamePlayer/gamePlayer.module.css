@@ -1,0 +1,68 @@
+.wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header {
+    outline: 1px solid rgba(255, 255, 255, 0.25);
+    width: 100%;
+    background-color: #1F1F1F;
+    text-align: center;
+    z-index: 1;
+}
+.cam {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+}
+.buttons, .inputs {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: .5em;
+    gap: .5em;
+    align-items: center;
+}
+.btn {
+    width: fit-content;
+    height: fit-content;
+    background-color: #1F1F1F;
+    line-height: 1em;
+    padding: .5em;
+    border-radius: .5em;
+    scale: 1;
+    transition: scale 0.2s ease-in-out;
+}
+.btn:hover {
+    cursor: pointer;
+    scale: 1.15;
+}
+
+.stats {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+}
+.stats > * {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: .25em;
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    border-left: 1px solid rgba(255, 255, 255, 0.25);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+}
+.stats > *:last-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.tButton {
+    cursor: pointer;
+    transition: scale 0.2s ease-in-out;
+}
+.tButton:hover {
+    scale: 1.3;
+}

@@ -1,0 +1,18 @@
+.gameTab {
+    display: flex;
+    gap: .5em;
+}
+
+.gameTab > * {
+    line-height: 1em;
+}
+
+.gameTab > .close-icon {
+    margin-left: 0.5em;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.gameTab > .close-icon:hover {
+    scale: 1.5;
+}

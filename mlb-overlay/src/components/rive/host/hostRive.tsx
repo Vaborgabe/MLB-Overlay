@@ -66,7 +66,9 @@ const HostRive = (hostProps: props) => {
                 setRiveLoaded(true);
                 const vmi = r.viewModelInstance;
                 
+                //@ts-expect-error asd
                 bindCamPos(cams?.p1Cam, vmi, "bCam");
+                //@ts-expect-error asd
                 bindCamPos(cams?.p2Cam, vmi, "rCam");
                 
                 //bindCamPos(p1Cam, vmi, "bCam");
@@ -107,8 +109,9 @@ const HostRive = (hostProps: props) => {
         });
         hostProps.GameData.hosts.forEach((src, index) => {
             if (index >= hostCams.length) {
+                //@ts-expect-error asd
                 const newCam = new VdoIframe(src);
-                bindCamPos(newCam, vmi, `hc${index + 1}`);
+                bindCamPos(newCam, vmi as ViewModelInstance, `hc${index + 1}`);
                 hostCams.push(newCam);
             }
         });
@@ -140,21 +143,37 @@ const HostRive = (hostProps: props) => {
             }
         }
         
+        //@ts-expect-error asd
         hostVMI.number("Ante").value = gameData.ante;
+        //@ts-expect-error asd
         hostVMI.string("Time").value = gameData.time;
+        //@ts-expect-error asd
         hostVMI.number("HostNum").value = gameData.hosts.length;
+        //@ts-expect-error asd
         hostVMI.number("Focus").value = gameData.focus;
+        //@ts-expect-error asd
         hostVMI.string("BlueName").value = gameData.playerOne.name;
+        //@ts-expect-error asd
         hostVMI.string("RedName").value = gameData.playerTwo.name;
+        //@ts-expect-error asd
         hostVMI.number("blueLives").value = gameData.playerOne.lives;
+        //@ts-expect-error asd
         hostVMI.number("redLives").value = gameData.playerTwo.lives;
+        //@ts-expect-error asd
         hostVMI.string("BPrevHigh").value = gameData.playerOne.prevHighScore;
+        //@ts-expect-error asd
         hostVMI.string("RPrevHigh").value = gameData.playerTwo.prevHighScore;
+        //@ts-expect-error asd
         hostVMI.string("BSpent").value = gameData.playerOne.totalSpent;
+        //@ts-expect-error asd
         hostVMI.string("RSpent").value = gameData.playerTwo.totalSpent;
+        //@ts-expect-error asd
         hostVMI.string("BPTotal").value = gameData.playerOne.mlbTotal;
+        //@ts-expect-error asd
         hostVMI.string("RPTotal").value = gameData.playerTwo.mlbTotal;
+        //@ts-expect-error asd
         hostVMI.string("BPRecord").value = gameData.playerOne.mlbRecord;
+        //@ts-expect-error asd
         hostVMI.string("RPRecord").value = gameData.playerTwo.mlbRecord;
 
         const pointValues = ["None", "None", "None"];
@@ -162,24 +181,33 @@ const HostRive = (hostProps: props) => {
         if(gameData.playerOne.points >= 1) pointValues[0] = "Blue";
         if(gameData.playerTwo.points >= 2) pointValues[1] = "Red";
         if(gameData.playerOne.points >= 2) pointValues[1] = "Blue";
+        //@ts-expect-error asd
         logo.enum("L").value = pointValues[0];
+        //@ts-expect-error asd
         logo.enum("C").value = pointValues[1];
+        //@ts-expect-error asd
         logo.enum("R").value = pointValues[2];
 
+        //@ts-expect-error asd
         p1RoundNum.number("RoundNum").value = gameData.playerOne.roundNum;
+        //@ts-expect-error asd
         p2RoundNum.number("RoundNum").value = gameData.playerTwo.roundNum;
         
         pOneVouchers.forEach((v, i) => {
             if (gameData.playerOne.vouchers[i]) {
+                //@ts-expect-error asd
                 v.enum("select").value = gameData.playerOne.vouchers[i];
             } else {
+                //@ts-expect-error asd
                 v.enum("select").value = "none";
             }
         });
         pTwoVouchers.forEach((v, i) => {
             if (gameData.playerTwo.vouchers[i]) {
+                //@ts-expect-error asd
                 v.enum("select").value = gameData.playerTwo.vouchers[i];
             } else {
+                //@ts-expect-error asd
                 v.enum("select").value = "none";
             }
         });
@@ -198,6 +226,7 @@ const HostRive = (hostProps: props) => {
         try {
             x?.on((event) => {
                 if (event !== undefined) {
+                    //@ts-expect-error asd
                     iframe.setX(event);
                 }
             });
@@ -208,6 +237,7 @@ const HostRive = (hostProps: props) => {
         try {
             y?.on((event) => {
                 if (event !== undefined) {
+                    //@ts-expect-error asd
                     iframe.setY(event);
                 }
             });
@@ -218,6 +248,7 @@ const HostRive = (hostProps: props) => {
         try {
             sx?.on((event) => {
                 if (event !== undefined) {
+                    //@ts-expect-error asd
                     iframe.setScaleX(event);
                 }
             });
@@ -228,6 +259,7 @@ const HostRive = (hostProps: props) => {
         try {
             sy?.on((event) => {
                 if (event !== undefined) {
+                    //@ts-expect-error asd
                     iframe.setScaleY(event);
                 }
             });
