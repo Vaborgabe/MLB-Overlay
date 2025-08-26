@@ -16,7 +16,7 @@
     "@mui/material": "^7.3.1",
     "@react-three/drei": "^10.1.2",
     "@react-three/fiber": "^9.1.2",
-    "@rive-app/canvas": "^2.28.1",
+    "@rive-app/canvas": "^2.31.2",
     "@rive-app/webgl": "^2.30.4",
     "@rive-app/webgl2": "^2.30.4",
     "glsl-canvas-js": "^0.2.9",

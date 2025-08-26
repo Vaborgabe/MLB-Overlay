@@ -15,6 +15,7 @@ import TextField from '@mui/material/TextField';
 import Tooltip from "@mui/material/Tooltip";
 import { useContext, useEffect, useState, type ChangeEvent } from 'react';
 import type { Player } from "../../interfaces";
+import { CollapseRemSection } from '../collapseRemSection/collapseRemSection';
 import { socketCtx } from '../socketIOCtx/socketIOCtx';
 import VDOFrame from "../vdoFrame/vdoFrame";
 import styles from "./gamePlayer.module.css";
@@ -100,12 +101,11 @@ export function GamePlayer({player, focused, speakingTo, gameId, playerId}: { pl
 
     return (
         <div className={styles.wrapper}>
-            <div className={styles.header}>
-                {player.name}
-            </div>
-            <div className={styles.cam}>
-                <VDOFrame code={player.vdoCode} volume={0} />
-            </div>
+            <CollapseRemSection title={player.name || "Player"}>
+                <div className={styles.cam} >
+                    <VDOFrame code={player.vdoCode} volume={0} />
+                </div>
+            </CollapseRemSection>
             <div className={styles.buttons}>
                 <Tooltip title="focus player">
                     <div className={styles.btn} onClick={handleFocus}>

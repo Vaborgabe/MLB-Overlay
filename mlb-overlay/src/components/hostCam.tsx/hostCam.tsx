@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import type { Player } from "../../interfaces";
-import { CollapseSection } from "../collapseSection/collapseSection";
+import { CollapseRemSection } from "../collapseRemSection/collapseRemSection";
 import { socketCtx } from "../socketIOCtx/socketIOCtx";
 import VDOFrame from "../vdoFrame/vdoFrame";
 import styles from "./hostCam.module.css";
@@ -40,9 +40,9 @@ export function HostCam({p}: {p: Player}) {
 
     return (
         <div className={styles.wrapper}>
-            <CollapseSection title={name}>
+            <CollapseRemSection title={name}>
                 <VDOFrame code={code} volume={vol} />
-            </CollapseSection>
+            </CollapseRemSection>
             <div className={styles.settingTitle}>Volume:</div>
             <input type="range" min={0} max={100} value={vol} className={styles.volumeSlider} onChange={handleVolumeChange}/>
             <div className={styles.button} onClick={handleRemove}>Remove</div>

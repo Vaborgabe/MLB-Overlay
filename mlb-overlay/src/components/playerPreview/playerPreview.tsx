@@ -13,7 +13,7 @@ export function PlayerPreview({vdoCode}: { vdoCode: string }) {
                 Preview <a className={styles.visBtn} onClick={() => setShown(!shown)}>{shown ? <VisibilityOffIcon /> : <VisibilityIcon />}</a>
             </div>
             <div className={styles.cam} style={{ display: shown ? 'block' : 'none' }}>
-                <VDOFrame code={vdoCode} volume={0} />
+                {shown ? <VDOFrame code={vdoCode} volume={0} /> : null}
             </div>
             <div className="divider"></div>
         </div>
